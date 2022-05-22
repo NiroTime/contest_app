@@ -1,14 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
-{% for task in tasks %}
-<ul>
-<a href="{{ task.get_absolute_url }}">{{task}}</a>
-</ul>
-{% endfor %}
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}
+{{ title }}
+{% endblock %}
+{% block content %}
+  <div class="container py-5">
+  <div class="row">
+    <aside class="col-12 col-md-3">
+      <ul class="list-group list-group-flush">
+        {% for task in tasks %}
+        <li class="list-group-item">
+          <a href="{{ task.get_absolute_url }}">{{ task }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </aside>
+  </div>
+  </div>
+{% endblock %}

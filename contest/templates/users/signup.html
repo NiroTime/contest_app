@@ -1,12 +1,10 @@
-{% extends 'base.html' %}
-{% block title %}
-{{ title }}
-{% endblock %}
+{% extends "base.html" %}
+{% block title %}Зарегистрироваться{% endblock %}
 {% block content %}
   <div class="row justify-content-center">
     <div class="col-md-8 p-5">
       <div class="card">
-        <div class="card-header">{{ task.content }}</div>
+        <div class="card-header">Зарегистрироваться</div>
           <div class="card-body">
             <form method="post"
             {% if action_url %}
@@ -14,12 +12,9 @@
             {% endif %}
             >
               {% include 'includes/form_base.html' %}
-              {% if answer %}
-                {{ answer }}
-              {% endif %}
               <div class="col-md-6 offset-md-4">
                 <button type="submit" class="btn btn-primary">
-                  Проверить
+                  Зарегистрироваться
                 </button>
               </div>
             </form>

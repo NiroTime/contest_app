@@ -31,7 +31,7 @@ def task_page(request, slug):
     task = get_object_or_404(Task, slug=slug)
     form = AnswerForm(
         request.POST or None,
-        initial={'text': task.function_name}
+        initial={'decision': task.function_name}
     )
     context = {
         'form': form,
@@ -39,7 +39,7 @@ def task_page(request, slug):
     }
     if request.method == 'POST':
         f = open('tasks/task_tests/form_answer.py', 'w')
-        f.write(request.POST['text'])
+        f.write(request.POST['decision'])
         # как убрать лишний пропуск строки в записанном файле, и нужно ли?
         f.close()
         from .task_tests.sum_a_b_c import testing
