@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+{% for task in tasks %}
+<ul>
+<a href="{{ task.get_absolute_url }}">{{task}}</a>
+</ul>
+{% endfor %}
+</body>
+</html>
