@@ -67,10 +67,10 @@ class Task(models.Model):
     )
 
     def __str__(self):
-        return self.content
+        return self.title
 
     def get_absolute_url(self):
-        return reverse('task', kwargs={'slug': self.slug})
+        return reverse('tasks:task', kwargs={'slug': self.slug})
 
     class Meta:
         verbose_name = 'Задание'

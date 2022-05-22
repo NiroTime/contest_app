@@ -15,7 +15,7 @@ def index(request):
 
 class AllTasksPage(ListView):
     model = Task
-    template_name = 'tasks/index.html'
+    template_name = 'tasks/tasks_all.html'
     context_object_name = 'tasks'
 
     def get_context_data(self, *, object_list=None, **kwargs):
