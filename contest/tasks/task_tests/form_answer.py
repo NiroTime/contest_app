@@ -1,2 +1,5 @@
-def sum_a_b_c(a,b,c):
-    return a+b+c
+def ostatok_ot_deleniya_na_10(n):
+    if n % 10 == 0:
+        return True
+    else:
+        return n % 10

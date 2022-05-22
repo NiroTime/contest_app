@@ -50,6 +50,7 @@ class Task(models.Model):
         default=True,
         verbose_name='Опубликовано',
     )
+    function_name = models.TextField(verbose_name='Название функции')
     category = models.ForeignKey(
         Category,
         null=True,

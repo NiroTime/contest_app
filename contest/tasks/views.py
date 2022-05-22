@@ -1,5 +1,4 @@
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse_lazy
 from django.views.generic import ListView
 
 from .models import Task
@@ -30,7 +29,10 @@ class AllTasksPage(ListView):
 def task_page(request, slug):
     template = 'tasks/task_detail.html'
     task = get_object_or_404(Task, slug=slug)
-    form = AnswerForm(request.POST or None)
+    form = AnswerForm(
+        request.POST or None,
+        initial={'text': task.function_name}
+    )
     context = {
         'form': form,
         'task': task,
@@ -38,9 +40,12 @@ def task_page(request, slug):
     if request.method == 'POST':
         f = open('tasks/task_tests/form_answer.py', 'w')
         f.write(request.POST['text'])
+        # как убрать лишний пропуск строки в записанном файле, и нужно ли?
         f.close()
         from .task_tests.sum_a_b_c import testing
+        # как заменить sum_a_b_c на слаг из реквеста?
         answer = testing()
         context['answer'] = answer
 
     return render(request, template, context=context)
+    # как применить что-то вроде ревёрс лейзи, чтобы небыло затупов при рендере

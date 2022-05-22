@@ -1,18 +1,19 @@
-from .form_answer import sum_a_b_c
+from .form_answer import ostatok_ot_deleniya_na_10
 
 tests = {
-    (1, 2, 3): 6,
-    (0, 0, 0): 0,
-    (-1, -2, -3): -6,
+    0: True,
+    10: True,
+    9: 9,
+    511: 1,
 }
 
 
 def testing():
     try:
         for test, answer in tests.items():
-            if sum_a_b_c(*test) != answer:
+            if ostatok_ot_deleniya_na_10(test) != answer:
                 return(f'Тест: {test}, не пройден. '
-                       f'Ваш результат: {sum_a_b_c(*test)} '
+                       f'Ваш результат: {ostatok_ot_deleniya_na_10(test)} '
                        f'Ожидаемый результат: {answer}'
                        )
         return 'Тесты пройдены!'
