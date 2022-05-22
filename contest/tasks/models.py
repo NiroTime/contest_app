@@ -53,6 +53,7 @@ class Task(models.Model):
     category = models.ForeignKey(
         Category,
         null=True,
+        blank=True,
         on_delete=models.SET_NULL,
         related_name='tasks',
         verbose_name='Категория',
@@ -61,7 +62,7 @@ class Task(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='tasks',
-        verbose_name='Категория',
+        verbose_name='Автор',
     )
 
     def __str__(self):

@@ -5,6 +5,14 @@
   <title>Title</title>
 </head>
 <body>
-
+<h1>{{ task.content }}</h1>
+<form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+    {{ field }}
+    {% endfor %}
+    <button type="submit">Добавить</button>
+</form>
+{{ answer }}
 </body>
 </html>
