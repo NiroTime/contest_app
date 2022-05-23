@@ -1,9 +1,11 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.views import PasswordChangeDoneView
 from django.contrib.auth.views import PasswordChangeView
-from django.urls import path, reverse_lazy
+from django.urls import path
 
-from .views import SignUp
+from .views import SignUp, profile
 
 
 app_name = 'users'
@@ -34,4 +36,5 @@ urlpatterns = [
         ),
         name='password_change_done'
     ),
-]
+    path('profile/<username>', profile, name='profile'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

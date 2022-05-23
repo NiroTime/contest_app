@@ -1,8 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView
 
 from .models import Task
 from .forms import AnswerForm
+from users.models import Profile, UsersSolvedTasks
 
 
 def index(request):
@@ -25,7 +27,7 @@ class AllTasksPage(ListView):
     def get_queryset(self):
         return Task.objects.filter(is_published=True)
 
-
+@login_required
 def task_page(request, slug):
     template = 'tasks/task_detail.html'
     task = get_object_or_404(Task, slug=slug)
@@ -46,6 +48,25 @@ def task_page(request, slug):
         # как заменить sum_a_b_c на слаг из реквеста?
         answer = testing()
         context['answer'] = answer
+        if answer == 'Тесты пройдены!':
+
+            user = request.user
+            ust = UsersSolvedTasks.objects.filter(
+                user=user).filter(task=task).first()
+            if not ust:
+                ust = UsersSolvedTasks(
+                    user=request.user,
+                    task=task,
+                    solved=False,
+                    decision=''
+                )
+                ust.save()
+            if not ust.solved:
+                user.profile.rating += task.task_rating
+                ust.solved = True
+            ust.decision = request.POST['decision']
+            ust.save()
+            user.profile.save()
 
     return render(request, template, context=context)
     # как применить что-то вроде ревёрс лейзи, чтобы небыло затупов при рендере

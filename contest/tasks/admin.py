@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Task, Category
+from .models import Task, Category, Flexibility
 
 
 class TaskAdmin(admin.ModelAdmin):
@@ -21,5 +21,11 @@ class CategoryAdmin(admin.ModelAdmin):
     list_filter = ('title',)
 
 
+class FlexibilityAdmin(admin.ModelAdmin):
+    list_display = ('title', 'slug',)
+    list_filter = ('title',)
+
+
 admin.site.register(Task, TaskAdmin)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(Flexibility, FlexibilityAdmin)

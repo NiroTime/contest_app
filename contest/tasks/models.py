@@ -26,6 +26,27 @@ class Category(models.Model):
         ordering = ['-id']
 
 
+class Flexibility(models.Model):
+    title = models.CharField(
+        max_length=200,
+        db_index=True,
+        verbose_name='Сложность'
+    )
+    slug = models.SlugField(
+        max_length=200,
+        unique=True,
+        verbose_name='URL'
+    )
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Сложность'
+        verbose_name_plural = 'Сложности'
+        ordering = ['-id']
+
+
 class Task(models.Model):
     title = models.CharField(
         max_length=200,
@@ -51,6 +72,18 @@ class Task(models.Model):
         verbose_name='Опубликовано',
     )
     function_name = models.TextField(verbose_name='Название функции')
+    task_rating = models.IntegerField(
+        default=10,
+        verbose_name='Рейтинг задания'
+    )
+    flexibility = models.ForeignKey(
+        Flexibility,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='tasks',
+        verbose_name='Сложность'
+    )
     category = models.ForeignKey(
         Category,
         null=True,
