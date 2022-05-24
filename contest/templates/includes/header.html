@@ -20,7 +20,7 @@
           {% endif %}" href="{% url 'users:logout' %}">Выйти</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'users:profile' user.username %}">Пользователь: {{ user.username }}</a>
+          <a class="nav-link" href="{% url 'tasks:profile' user.username %}">Пользователь: {{ user.username }}</a>
         </li>
         {% else %}
         <li class="nav-item">

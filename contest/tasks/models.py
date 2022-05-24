@@ -109,3 +109,22 @@ class Task(models.Model):
         verbose_name = 'Задание'
         verbose_name_plural = 'Задания'
         ordering = ['-time_create']
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Task, on_delete=models.CASCADE,
+                             related_name="Комментарий")
+    author = models.ForeignKey(User, on_delete=models.CASCADE,
+                               related_name="Комментарий")
+    text = models.TextField()
+    created = models.DateTimeField("Время создания", auto_now_add=True)
+
+    def __str__(self):
+        return self.text
+
+
+class Follow(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name="Подписчик")
+    author = models.ForeignKey(User, on_delete=models.CASCADE,
+                               related_name="Автор")
