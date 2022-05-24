@@ -1,10 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
 from django.views.generic import ListView
 
-from .models import Task, Follow
+from .models import Task, Follow, Comment
 from .forms import AnswerForm, CommentForm
 from users.models import Profile, UsersSolvedTasks
 from users.forms import ProfileForm, UpdateUserForm
@@ -139,15 +138,20 @@ def profile_unfollow(request, username):
     return redirect('tasks:profile', username)
 
 
-# @login_required
-# def add_comment(request, username, post_id):
-#     post = get_object_or_404(Task, id=post_id, author__username=username)
-#     form = CommentForm(request.POST or None)
-#     if form.is_valid():
-#         comment = form.save(commit=False)
-#         comment.author = request.user
-#         comment.post = post
-#         comment.save()
-#         return redirect('post', username, post_id)
-#     return render(request, 'includes/comments.html', {'form': form,
-#                   'post': post})
+@login_required
+def task_talks(request, slug):
+    template = 'tasks/task_talks.html'
+    task = get_object_or_404(Task, slug=slug)
+    comments = Comment.objects.filter(task=task)
+    form = CommentForm(request.POST or None)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.author = request.user
+        comment.task = task
+        comment.save()
+        return redirect('tasks:task_talks', slug)
+    context = {
+        'comments': comments,
+        'form': form,
+    }
+    return render(request, template, context=context)

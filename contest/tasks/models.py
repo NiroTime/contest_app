@@ -112,7 +112,7 @@ class Task(models.Model):
 
 
 class Comment(models.Model):
-    post = models.ForeignKey(Task, on_delete=models.CASCADE,
+    task = models.ForeignKey(Task, on_delete=models.CASCADE,
                              related_name="Комментарий")
     author = models.ForeignKey(User, on_delete=models.CASCADE,
                                related_name="Комментарий")
