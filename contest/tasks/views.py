@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView
 
-from .models import Task, Follow, Comment
+from .models import Task, Follow, Comment, Like
 from .forms import AnswerForm, CommentForm
 from users.models import Profile, UsersSolvedTasks
 from users.forms import ProfileForm, UpdateUserForm
@@ -92,10 +92,16 @@ def profile(request, username):
     else:
         following = False
     user = request.user
+    posts_count = Comment.objects.filter(author=author).count()
+    tasks_solved = UsersSolvedTasks.objects.filter(
+        user=author, solved=True
+    ).count()
     context = {
         'user': user,
         'author': author,
         'following': following,
+        'posts_count': posts_count,
+        'tasks_solved': tasks_solved,
     }
     return render(request, template, context=context)
 
@@ -139,10 +145,31 @@ def profile_unfollow(request, username):
 
 
 @login_required
+def post_like(request, slug, pk):
+    comment = Comment.objects.get(pk=pk)
+    like = Like.objects.filter(user=request.user, post=comment)
+    if request.user != comment.author and not like.exists():
+        Like.objects.create(user=request.user, post=comment)
+    return redirect('tasks:task_talks', slug)
+
+
+@login_required
+def post_unlike(request, slug, pk):
+    comment = Comment.objects.get(pk=pk)
+    like = Like.objects.filter(user=request.user, post=comment)
+    if like.exists():
+        like.delete()
+    return redirect('tasks:task_talks', slug)
+
+
+@login_required
 def task_talks(request, slug):
     template = 'tasks/task_talks.html'
     task = get_object_or_404(Task, slug=slug)
+
     comments = Comment.objects.filter(task=task)
+    # нужно добавить к каждому комменту количество лайков
+
     form = CommentForm(request.POST or None)
     if form.is_valid():
         comment = form.save(commit=False)
@@ -151,6 +178,7 @@ def task_talks(request, slug):
         comment.save()
         return redirect('tasks:task_talks', slug)
     context = {
+        'task': task,
         'comments': comments,
         'form': form,
     }

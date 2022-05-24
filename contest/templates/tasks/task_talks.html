@@ -9,6 +9,16 @@
             <ul>
               <p><a href="{% url 'tasks:profile' comment.author %}">{{ comment.author }}</a></p>
               <p>{{ comment.text }}</p>
+
+
+
+              <p>
+                <a href="{% url 'tasks:post_like' task.slug comment.pk %}">Нравится:</a>
+                <a href="{% url 'tasks:post_unlike' task.slug comment.pk %}">Отменить Нравится:</a>
+              </p>
+
+
+
             </ul>
           {% endfor %}
           <form method="post">

@@ -7,6 +7,8 @@
 {% if author.profile.avatar %}
   <p><img src="{{ author.profile.avatar.url }}"></p>
 {% endif %}
+<p>количество постов: {{ posts_count }}</p>
+<p>количество решённых задач: {{ tasks_solved }}</p>
 
 {% if user != author %}
 <li class="list-group-item">

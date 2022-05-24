@@ -22,7 +22,13 @@ class Profile(models.Model):
 
 
 class UsersSolvedTasks(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
+    task = models.ForeignKey(
+        Task,
+        on_delete=models.CASCADE,
+    )
     solved = models.BooleanField(default=False)
     decision = models.TextField(null=True, blank=True)

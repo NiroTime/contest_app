@@ -13,5 +13,15 @@ urlpatterns = [
          name="profile_follow"),
     path("profile/<str:username>/unfollow/", profile_unfollow,
          name="profile_unfollow"),
-    path('tasks/<slug:slug>/talks', task_talks, name='task_talks')
+    path('tasks/<slug:slug>/talks', task_talks, name='task_talks'),
+    path(
+        'tasks/<slug:slug>/talks/comment/<int:pk>/like',
+        post_like,
+        name='post_like'
+    ),
+    path(
+        'tasks/<slug:slug>/talks/comment/<int:pk>/unlike',
+        post_unlike,
+        name='post_unlike'
+    ),
 ]
