@@ -37,4 +37,4 @@ urlpatterns = [
         name='password_change_done'
     ),
     path('profile/<username>', profile, name='profile'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

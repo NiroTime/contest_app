@@ -8,7 +8,7 @@ from tasks.models import Task
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(blank=True)
+    avatar = models.ImageField(upload_to="photos/%Y/%m/%d/", blank=True)
     rating = models.IntegerField(default=0, editable=False)
 
     @receiver(post_save, sender=User)

@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView
@@ -7,10 +8,14 @@ from .forms import AnswerForm
 from users.models import Profile, UsersSolvedTasks
 
 
+User = get_user_model()
+
+
 def index(request):
     template = 'tasks/index.html'
+    top_users = Profile.objects.all().order_by('-rating')
     context = {
-        'title': 'title'
+        'top_users': top_users
     }
     return render(request, template, context=context)
 
@@ -27,6 +32,7 @@ class AllTasksPage(ListView):
     def get_queryset(self):
         return Task.objects.filter(is_published=True)
 
+
 @login_required
 def task_page(request, slug):
     template = 'tasks/task_detail.html'
@@ -40,11 +46,14 @@ def task_page(request, slug):
         'task': task,
     }
     if request.method == 'POST':
+        print(111)
         f = open('tasks/task_tests/form_answer.py', 'w')
         f.write(request.POST['decision'])
         # как убрать лишний пропуск строки в записанном файле, и нужно ли?
         f.close()
+        print(222)
         from .task_tests.sum_a_b_c import testing
+        print(333)
         # как заменить sum_a_b_c на слаг из реквеста?
         answer = testing()
         context['answer'] = answer
