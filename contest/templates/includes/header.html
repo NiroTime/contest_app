@@ -8,6 +8,11 @@
       </a>
       <ul class="nav nav-pills">
         {% with request.resolver_match.view_name as view_name %}
+        <li class="nav-item">
+          <a class="nav-link link-light {% if request.resolver_match.view_name  == 'tasks:tasks_all' %}
+          active
+          {% endif %}" href="{% url 'tasks:tasks_all' %}">Задания</a>
+        </li>
         {% if request.user.is_authenticated %}
         <li class="nav-item">
           <a class="nav-link link-light {% if request.resolver_match.view_name  == 'users:password_change' %}
