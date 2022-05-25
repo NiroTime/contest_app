@@ -133,5 +133,5 @@ class Follow(models.Model):
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,
                              related_name='likeuser')
-    post = models.ForeignKey(Comment, on_delete=models.CASCADE,
-                             related_name='likecomment')
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE,
+                                related_name='likecomment')

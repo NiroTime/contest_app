@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count, Exists, OuterRef
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView
 
@@ -147,16 +148,16 @@ def profile_unfollow(request, username):
 @login_required
 def post_like(request, slug, pk):
     comment = Comment.objects.get(pk=pk)
-    like = Like.objects.filter(user=request.user, post=comment)
-    if request.user != comment.author and not like.exists():
-        Like.objects.create(user=request.user, post=comment)
+    like = Like.objects.filter(user=request.user, comment=comment)
+    if not like.exists():
+        Like.objects.create(user=request.user, comment=comment)
     return redirect('tasks:task_talks', slug)
 
 
 @login_required
 def post_unlike(request, slug, pk):
     comment = Comment.objects.get(pk=pk)
-    like = Like.objects.filter(user=request.user, post=comment)
+    like = Like.objects.filter(user=request.user, comment=comment)
     if like.exists():
         like.delete()
     return redirect('tasks:task_talks', slug)
@@ -167,8 +168,11 @@ def task_talks(request, slug):
     template = 'tasks/task_talks.html'
     task = get_object_or_404(Task, slug=slug)
 
-    comments = Comment.objects.filter(task=task)
-    # нужно добавить к каждому комменту количество лайков
+    comments = task.comment.all().annotate(
+        count_likes=Count('likecomment')
+    ).annotate(is_request_user=Exists(
+        Like.objects.filter(user=request.user, comment=OuterRef('pk')))
+    )
 
     form = CommentForm(request.POST or None)
     if form.is_valid():

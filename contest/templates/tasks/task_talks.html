@@ -9,16 +9,22 @@
             <ul>
               <p><a href="{% url 'tasks:profile' comment.author %}">{{ comment.author }}</a></p>
               <p>{{ comment.text }}</p>
-
-
-
-              <p>
-                <a href="{% url 'tasks:post_like' task.slug comment.pk %}">Нравится:</a>
-                <a href="{% url 'tasks:post_unlike' task.slug comment.pk %}">Отменить Нравится:</a>
-              </p>
-
-
-
+              <p>{{ comment.count_likes }}</p>
+              <li class="list-group-item">
+                {% if not comment.is_request_user %}
+                  <a
+                    class="btn btn-lg btn-primary"
+                    href="{% url 'tasks:post_like' task.slug comment.pk %}" role="button">
+                    Лайк
+                  </a>
+                {% else %}
+                  <a
+                    class="btn btn-lg btn-light"
+                    href="{% url 'tasks:post_unlike' task.slug comment.pk %}" role="button">
+                    Отменить Лайк
+                  </a>
+                {% endif %}
+              </li>
             </ul>
           {% endfor %}
           <form method="post">
