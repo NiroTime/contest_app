@@ -113,9 +113,9 @@ class Task(models.Model):
 
 class Comment(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE,
-                             related_name="comment")
+                             related_name="comments")
     author = models.ForeignKey(User, on_delete=models.CASCADE,
-                               related_name="comment")
+                               related_name="comments")
     text = models.TextField()
     created = models.DateTimeField("Время создания", auto_now_add=True)
 
@@ -125,13 +125,13 @@ class Comment(models.Model):
 
 class Follow(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             related_name="followuser")
+                             related_name="following")
     author = models.ForeignKey(User, on_delete=models.CASCADE,
-                               related_name="followauthor")
+                               related_name="followers")
 
 
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             related_name='likeuser')
+                             related_name='who_likes')
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE,
-                                related_name='likecomment')
+                                related_name='like_comment')

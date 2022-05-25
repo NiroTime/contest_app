@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Task, Category, Flexibility
+from .models import Category, Flexibility, Task
 
 
 class TaskAdmin(admin.ModelAdmin):

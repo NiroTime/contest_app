@@ -3,12 +3,13 @@
 
 {% block content %}
 
-{{ author.profile.rating }}
 {% if author.profile.avatar %}
   <p><img src="{{ author.profile.avatar.url }}"></p>
 {% endif %}
+<p>рейтинг: {{ author.profile.rating }}</p>
 <p>количество постов: {{ posts_count }}</p>
 <p>количество решённых задач: {{ tasks_solved }}</p>
+<p>получено лайков: {{ likes_count }}</p>
 
 {% if user != author %}
 <li class="list-group-item">

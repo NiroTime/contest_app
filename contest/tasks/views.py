@@ -1,14 +1,14 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Exists, OuterRef
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView
 
-from .models import Task, Follow, Comment, Like
-from .forms import AnswerForm, CommentForm
-from users.models import Profile, UsersSolvedTasks
 from users.forms import ProfileForm, UpdateUserForm
+from users.models import Profile, UsersSolvedTasks
 
+from .forms import AnswerForm, CommentForm
+from .models import Comment, Follow, Like, Task
 
 User = get_user_model()
 
@@ -93,16 +93,20 @@ def profile(request, username):
     else:
         following = False
     user = request.user
-    posts_count = Comment.objects.filter(author=author).count()
+    comments_count = Comment.objects.filter(author=author).count()
     tasks_solved = UsersSolvedTasks.objects.filter(
         user=author, solved=True
     ).count()
+    likes_count = Comment.objects.filter(
+        author=author
+    ).aggregate(Count("like_comment"))
     context = {
         'user': user,
         'author': author,
         'following': following,
-        'posts_count': posts_count,
+        'posts_count': comments_count,
         'tasks_solved': tasks_solved,
+        'likes_count': likes_count['like_comment__count'],
     }
     return render(request, template, context=context)
 
@@ -112,7 +116,7 @@ def profile_edit(request, username):
     template = 'tasks/profile_edit.html'
     user = get_object_or_404(User, username=username)
     if request.user.username != username:
-        return redirect('users:profile', username)
+        return redirect('tasks:profile', username)
     user_form = UpdateUserForm(request.POST, instance=user)
     profile_form = ProfileForm(request.POST, instance=user.profile)
     if user_form.is_valid() and profile_form.is_valid():
@@ -168,8 +172,8 @@ def task_talks(request, slug):
     template = 'tasks/task_talks.html'
     task = get_object_or_404(Task, slug=slug)
 
-    comments = task.comment.all().annotate(
-        count_likes=Count('likecomment')
+    comments = task.comments.all().annotate(
+        count_likes=Count('like_comment')
     ).annotate(is_request_user=Exists(
         Like.objects.filter(user=request.user, comment=OuterRef('pk')))
     )
