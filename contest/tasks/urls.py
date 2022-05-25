@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 
 from .views import *
@@ -9,6 +11,7 @@ urlpatterns = [
     path('tasks/all/', AllTasksPage.as_view(), name='tasks_all'),
     path('tasks/<slug:slug>/', task_page, name='task'),
     path('profile/<username>', profile, name='profile'),
+    path('profile/<username>/edit', profile_edit, name='profile_edit'),
     path("profile/<str:username>/follow/", profile_follow,
          name="profile_follow"),
     path("profile/<str:username>/unfollow/", profile_unfollow,

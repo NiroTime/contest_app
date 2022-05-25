@@ -117,8 +117,10 @@ def profile_edit(request, username):
     user = get_object_or_404(User, username=username)
     if request.user.username != username:
         return redirect('tasks:profile', username)
-    user_form = UpdateUserForm(request.POST, instance=user)
-    profile_form = ProfileForm(request.POST, instance=user.profile)
+    user_form = UpdateUserForm(request.POST or None, instance=user)
+    profile_form = ProfileForm(
+        request.POST, request.FILES or None, instance=user.profile
+    )
     if user_form.is_valid() and profile_form.is_valid():
         user_form.save()
         profile_form.save()

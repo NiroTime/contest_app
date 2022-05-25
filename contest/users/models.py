@@ -6,9 +6,19 @@ from django.dispatch import receiver
 from tasks.models import Task
 
 
+class ImageField(models.ImageField):
+
+    def save_form_data(self, instance, data):
+        if data is not None:
+            file = getattr(instance, self.attname)
+            if file != data:
+                file.delete(save=False)
+        super(ImageField, self).save_form_data(instance, data)
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(upload_to="photos/%Y/%m/%d/", blank=True)
+    avatar = ImageField(upload_to="photos/%Y/%m/%d/", blank=True)
     rating = models.IntegerField(default=0, editable=False)
 
     @receiver(post_save, sender=User)
