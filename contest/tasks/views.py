@@ -15,13 +15,19 @@ User = get_user_model()
 
 def index(request):
     template = 'tasks/index.html'
-    top_users = Profile.objects.all().order_by('-rating')
+    top_users = Profile.objects.all(
+    ).order_by('-rating')[:10].select_related('user')
     user = request.user
-    following = user.following.all()
+
+    following = user.following.all().select_related('author')
+    # вот тут я получаю сэт из follow объектов, и уже в html шаблое делаю
+    # ленивый запрос на получение UserActions для для каждого автора
+    # мне кажется нужно сразу передавать сэт из UserActions, но не знаю как
 
     context = {
         'top_users': top_users,
         'following': following,
+        'title': 'Контест апп'
     }
     return render(request, template, context=context)
 
@@ -33,6 +39,7 @@ class AllTasksPage(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['title'] = 'Все задания'
         return context
 
     def get_queryset(self):
@@ -50,6 +57,7 @@ def task_page(request, slug):
     context = {
         'form': form,
         'task': task,
+        'title': f'Задание {slug}'
     }
     if request.method == 'POST':
         f = open('tasks/task_tests/form_answer.py', 'w')
@@ -203,7 +211,7 @@ def task_talks(request, slug):
         count_likes=Count('like_comment')
     ).annotate(is_request_user=Exists(
         Like.objects.filter(user=request.user, comment=OuterRef('pk')))
-    )
+    ).select_related('author')
 
     form = CommentForm(request.POST or None)
     if form.is_valid():
