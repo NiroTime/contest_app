@@ -31,14 +31,30 @@ class Profile(models.Model):
         instance.profile.save()
 
 
+class UserActions(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='actions',
+    )
+    description = models.TextField()
+    action_url = models.CharField(max_length=250)
+    time_create = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-time_create']
+
+
 class UsersSolvedTasks(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
+        related_name='UST',
     )
     task = models.ForeignKey(
         Task,
         on_delete=models.CASCADE,
+        related_name='UST',
     )
     solved = models.BooleanField(default=False)
     decision = models.TextField(null=True, blank=True)

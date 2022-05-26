@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView
 
 from users.forms import ProfileForm, UpdateUserForm
-from users.models import Profile, UsersSolvedTasks
+from users.models import UserActions, Profile, UsersSolvedTasks
 
 from .forms import AnswerForm, CommentForm
 from .models import Comment, Follow, Like, Task
@@ -16,8 +16,12 @@ User = get_user_model()
 def index(request):
     template = 'tasks/index.html'
     top_users = Profile.objects.all().order_by('-rating')
+    user = request.user
+    following = user.following.all()
+
     context = {
-        'top_users': top_users
+        'top_users': top_users,
+        'following': following,
     }
     return render(request, template, context=context)
 
@@ -48,14 +52,11 @@ def task_page(request, slug):
         'task': task,
     }
     if request.method == 'POST':
-        print(111)
         f = open('tasks/task_tests/form_answer.py', 'w')
         f.write(request.POST['decision'])
         # как убрать лишний пропуск строки в записанном файле, и нужно ли?
         f.close()
-        print(222)
         from .task_tests.sum_a_b_c import testing
-        print(333)
         # как заменить sum_a_b_c на слаг из реквеста?
         answer = testing()
         context['answer'] = answer
@@ -66,7 +67,7 @@ def task_page(request, slug):
                 user=user).filter(task=task).first()
             if not ust:
                 ust = UsersSolvedTasks(
-                    user=request.user,
+                    user=user,
                     task=task,
                     solved=False,
                     decision=''
@@ -78,6 +79,18 @@ def task_page(request, slug):
             ust.decision = request.POST['decision']
             ust.save()
             user.profile.save()
+            action = UserActions.objects.filter(
+                user=user,
+                description=f'выполнил(а) задание: {slug}!',
+                action_url=f'/tasks/{slug}/',
+            ).first()
+            if not action:
+                action = UserActions(
+                    user=user,
+                    description=f'выполнил(а) задание: {slug}!',
+                    action_url=f'/tasks/{slug}/'
+                )
+                action.save()
 
     return render(request, template, context=context)
     # как применить что-то вроде ревёрс лейзи, чтобы небыло затупов при рендере
@@ -139,6 +152,12 @@ def profile_follow(request, username):
     is_follower = Follow.objects.filter(user=user, author=author)
     if user != author and not is_follower.exists():
         Follow.objects.create(user=user, author=author)
+        action = UserActions(
+            user=request.user,
+            description=f'подписался(ась) на: {username}!',
+            action_url=f'/profile/{username}/'
+        )
+        action.save()
     return redirect('tasks:profile', username)
 
 
@@ -148,6 +167,12 @@ def profile_unfollow(request, username):
     is_follower = Follow.objects.filter(user=request.user, author=author)
     if is_follower.exists():
         is_follower.delete()
+        action = UserActions(
+            user=request.user,
+            description=f'отписался(ась) от: {username}!',
+            action_url=f'/profile/{username}/'
+        )
+        action.save()
     return redirect('tasks:profile', username)
 
 
@@ -186,6 +211,12 @@ def task_talks(request, slug):
         comment.author = request.user
         comment.task = task
         comment.save()
+        action = UserActions(
+            user=request.user,
+            description=f'написал(а) комментарий к заданию: {slug}!',
+            action_url=f'/tasks/{slug}/talks/'
+        )
+        action.save()
         return redirect('tasks:task_talks', slug)
     context = {
         'task': task,

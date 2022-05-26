@@ -1,2 +1,2 @@
 def sum_a_b_c(a, b, c):
-    return 5
+    return a+b+c

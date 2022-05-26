@@ -12,4 +12,14 @@
     </ul>
     {% endfor %}
   </div>
+
+  {% for follow in following %}
+    {% for action in follow.author.actions.all %}
+      <ul>
+      {% if action.action_url %}
+        <a href="{{ action.action_url }}">{{ action.user }}  {{ action.description }}</a>
+      {% endif %}
+      </ul>
+    {% endfor %}
+  {% endfor %}
 {% endblock %}
