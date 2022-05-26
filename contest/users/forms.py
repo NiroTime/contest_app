@@ -8,13 +8,15 @@ User = get_user_model()
 
 
 class CreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
     class Meta(UserCreationForm.Meta):
         model = User
         fields = ('first_name', 'last_name', 'username', 'email',)
 
 
 class ProfileForm(forms.ModelForm):
-    avatar = forms.ImageField()
+    avatar = forms.ImageField(required=False)
 
     class Meta:
         model = Profile
@@ -22,8 +24,8 @@ class ProfileForm(forms.ModelForm):
 
 
 class UpdateUserForm(forms.ModelForm):
-    first_name = forms.CharField(required=True)
-    last_name = forms.CharField(required=True)
+    first_name = forms.CharField()
+    last_name = forms.CharField()
     username = forms.CharField(required=True)
     email = forms.EmailField(required=True)
 

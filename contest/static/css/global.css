@@ -26,6 +26,15 @@ a{
 ul{
     list-style: None;
 }
+.user{
+    color: var(--acent-color);
+    position: relative;
+    z-index: 1;
+    transition: var(--transition);
+}
+.user:hover{
+    color: var(--link-active);
+}
 .link{
     position: relative;
     z-index: 1;
@@ -88,4 +97,6 @@ ul{
 .btn:hover{
     background-color: hsla(0,0%,100%,.3);
 }
-.header__auth-btn
+.header__auth-btn{
+
+}
