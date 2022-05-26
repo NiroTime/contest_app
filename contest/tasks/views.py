@@ -17,18 +17,17 @@ def index(request):
     template = 'tasks/index.html'
     top_users = Profile.objects.all(
     ).order_by('-rating')[:10].select_related('user')
-    user = request.user
-
-    following = user.following.all().select_related('author')
-    # вот тут я получаю сэт из follow объектов, и уже в html шаблое делаю
-    # ленивый запрос на получение UserActions для для каждого автора
-    # мне кажется нужно сразу передавать сэт из UserActions, но не знаю как
-
     context = {
         'top_users': top_users,
-        'following': following,
         'title': 'Контест апп'
     }
+    if request.user.is_authenticated:
+        user = request.user
+        following = user.following.all().select_related(
+            'author'
+        ).prefetch_related('author__actions')
+        context['following'] = following
+
     return render(request, template, context=context)
 
 

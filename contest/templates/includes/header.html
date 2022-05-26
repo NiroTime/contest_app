@@ -1,46 +1,42 @@
 {% load static %}
 <header>
-  <nav class="navbar navbar-light" style="background-color: lightskyblue">
+  <nav class="header">
     <div class="container">
-      <a class="navbar-brand" href="{% url 'tasks:index' %}">
-        <img src="{% static 'img/logo.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
-        <span style="color:red">Ya</span>tube
-      </a>
-      <ul class="nav nav-pills">
-        {% with request.resolver_match.view_name as view_name %}
-        <li class="nav-item">
-          <a class="nav-link link-light {% if request.resolver_match.view_name  == 'tasks:tasks_all' %}
+      <div class="header__wrapper">
+        <a class="header__logo" href="{% url 'tasks:index' %}">
+          <img src="{% static 'img/logo.png' %}" class="logo" alt="">
+        </a>
+        <ul class="header__links">
+          {% with request.resolver_match.view_name as view_name %}
+          <a href="{% url 'tasks:tasks_all' %}">
+            <li class="link{% if request.resolver_match.view_name  == 'tasks:tasks_all' %}
           active
-          {% endif %}" href="{% url 'tasks:tasks_all' %}">Задания</a>
-        </li>
+          {% endif %}">Задания</li>
+          </a>
+        </ul>
         {% if request.user.is_authenticated %}
-        <li class="nav-item">
-          <a class="nav-link link-light {% if request.resolver_match.view_name  == 'users:password_change' %}
-          active
-          {% endif %}" href="{% url 'users:password_change' %}">Изменить пароль</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link link-light {% if request.resolver_match.view_name  == 'users:logout' %}
-          active
-          {% endif %}" href="{% url 'users:logout' %}">Выйти</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'tasks:profile' user.username %}">Пользователь: {{ user.username }}</a>
-        </li>
+          <div class="header__user">
+            <a href="{% url 'tasks:profile' user.username %}">
+              <div class="user">{{ user.username }}</div>
+            </a>
+          </div>
         {% else %}
-        <li class="nav-item">
-          <a class="nav-link link-light {% if request.resolver_match.view_name  == 'users:login' %}
-          active
-          {% endif %}" href="{% url 'users:login' %}">Войти</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link link-light {% if request.resolver_match.view_name  == 'users:signup' %}
-          active
-          {% endif %}" href="{% url 'users:signup' %}">Регистрация</a>
-        </li>
-        {% endif %}
-      {% endwith %}
-      </ul>
+          <div class="header__auth">
+            <a href="{% url 'users:login' %}">
+              <div class="btn header__auth-btn {% if request.resolver_match.view_name  == 'users:login' %}
+              active
+              {% endif %}">Войти</div>
+            </a>
+            <a href="{% url 'users:signup' %}">
+              <div class="btn header__auth-btn {% if request.resolver_match.view_name  == 'users:signup' %}
+              active
+              {% endif %}">Регистрация</div>
+            </a>
+          </div>
+          {% endif %}
+        {% endwith %}
+        </div>
+      </div>
     </div>
   </nav>
 </header>
