@@ -1,0 +1,33 @@
+table {
+  width: 100%;
+  border-spacing: 0;
+  border-collapse: collapse;
+  & th,
+  td {
+    text-align: left;
+    padding: 4px 10px 4px 15px;
+    line-height: 28px;
+  }
+}
+
+.leaderboard {
+  &__row:nth-child(even) {
+    background-color: $bg-color-second;
+  }
+  &__cell:nth-child(2) {
+    width: 100%;
+  }
+  & td.leaderboard__cell:nth-child(1) {
+    font-weight: 700;
+    color: $color-white;
+  }
+}
+
+.tasks-table {
+  &__row:nth-child(even) {
+    background-color: $bg-color-second;
+  }
+  &__cell:nth-child(2) {
+    width: 100%;
+  }
+}

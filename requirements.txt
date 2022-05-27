@@ -1,8 +1,15 @@
 asgiref==3.5.2
 Django==3.2.13
+django-appconf==1.0.5
+django-compressor==4.0
 django-debug-toolbar==3.4.0
+django-sass-processor==1.1
 isort==5.10.1
+libsass==0.21.0
 Pillow==9.1.1
 pytz==2022.1
+rcssmin==1.1.0
+rjsmin==1.2.0
+six==1.16.0
 sqlparse==0.4.2
-typing-extensions==4.2.0
+typing_extensions==4.2.0
