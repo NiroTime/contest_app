@@ -1,0 +1,50 @@
+.header {
+  background-color: $bg-color-second;
+  box-shadow: $box-shadow;
+  &__wrapper {
+    display: flex;
+    align-items: center;
+    padding: 7px 0;
+  }
+  &__logo {
+    font-size: 1.2rem;
+    font-weight: 700;
+    & span {
+      text-transform: uppercase;
+      color: $color-accent;
+    }
+  }
+  &__links {
+    display: flex;
+    margin-left: 30px;
+    flex-grow: 1;
+    gap: 20px;
+    &-item {
+      transition: $transition;
+      &.active {
+        color: $color-white;
+        position: relative;
+        &::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          bottom: -13px;
+          width: 100%;
+          height: 2px;
+          background-color: $color-white;
+          border-radius: 5px;
+          box-shadow: $box-shadow;
+        }
+      }
+      &:hover {
+        color: $color-white;
+      }
+    }
+  }
+  &__user {
+  }
+  &__auth {
+    display: flex;
+    gap: 20px;
+  }
+}

@@ -1,17 +1,18 @@
-{% load static %}
 <header>
   <nav class="header">
     <div class="container">
       <div class="header__wrapper">
-        <a class="header__logo" href="{% url 'tasks:index' %}">
-          <img src="{% static 'img/logo.png' %}" class="logo" alt="">
+        <a href="{% url 'tasks:index' %}">
+          <div class='header__logo'>
+            <span>Contest</span>App</div>
         </a>
         <ul class="header__links">
           {% with request.resolver_match.view_name as view_name %}
           <a href="{% url 'tasks:tasks_all' %}">
-            <li class="link{% if request.resolver_match.view_name  == 'tasks:tasks_all' %}
-          active
-          {% endif %}">Задания</li>
+            <li class="header__links-item {% if request.resolver_match.view_name  == 'tasks:tasks_all' %}active{% endif %}">Задания</li>
+          </a>
+          <a href="#">
+            <li class="header__links-item {% if request.resolver_match.view_name  == '#' %}active{% endif %}">Теория</li>
           </a>
         </ul>
         {% if request.user.is_authenticated %}
@@ -23,20 +24,16 @@
         {% else %}
           <div class="header__auth">
             <a href="{% url 'users:login' %}">
-              <div class="btn header__auth-btn {% if request.resolver_match.view_name  == 'users:login' %}
-              active
-              {% endif %}">Войти</div>
+              <div class="btn btn--trancsparent {% if request.resolver_match.view_name  == 'users:login' %}active{% endif %}">Войти</div>
             </a>
             <a href="{% url 'users:signup' %}">
-              <div class="btn header__auth-btn {% if request.resolver_match.view_name  == 'users:signup' %}
-              active
-              {% endif %}">Регистрация</div>
+              <div class="btn btn--accent{% if request.resolver_match.view_name  == 'users:signup' %}active{% endif %}">Регистрация</div>
             </a>
           </div>
-          {% endif %}
+        {% endif %}
         {% endwith %}
-        </div>
       </div>
     </div>
-  </nav>
+  </div>
+</nav>
 </header>

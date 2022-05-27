@@ -1,24 +1,67 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}
-{{ title }}
+  {{ title }}
 {% endblock %}
 
 {% block content %}
-  <div class="container py-5">
-    {% for profile in top_users %}
-    <ul>
-      <li>{{ profile.user }}-----{{ profile.rating }}</li>
-    </ul>
-    {% endfor %}
+  <div class="home">
+    <div class="home__leaderboard">
+      <h2 class="home__leaderboard-title title">Топ-10 пользователей</h2>
+      <p class="home__leaderboard-desc text">Рейтинг пользователя формируется на основне сложности решенных задач, а также других активностях, таких как: количетсво лайков, коментов и т.п. Некоторые активности приносят больше рейтинга чем другие. Например, публикация задачи приности больше рейтинга, чем ее решение.</p>
+      <div class="home__leaderboard-table">
+        <table class='leaderboard'>
+          <tbody>
+            <tr class='leaderboard__row'>
+              <th class='leaderboard__cell'>Ранк</th>
+              <th class='leaderboard__cell'>Пользователь</th>
+              <th class='leaderboard__cell'>Рейтинг</th>
+            </tr>
+            {% for profile in top_users %}
+              <tr class='leaderboard__row'>
+                <td class='leaderboard__cell'>
+                  #1
+                </td>
+                <td class='leaderboard__cell'>
+                  <a href="#">
+                    {{ profile.user }}
+                  </a>
+                </td>
+                <td class='leaderboard__cell'>{{ profile.rating }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="home__tabs">
+      <button class='btn btn--trancsparent'>Новости</button>
+      <button class='btn btn--trancsparent active'>Подписки</button>
+    </div>
+    <div class="home__content">
+      {% for profile in top_users %}
+        <div class="feed">
+          <img class="feed__avatar" src='{% static 'img/user-icon.png' %}' alt='user-icon'></img>
+          <div class="feed__wrapper">
+            <a href="#">{{profile.user}}</a>
+            решил задачу
+            <a href="#">Task</a>
+            <span>
+              7 дней назад
+            </span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
   </div>
 
   {% for follow in following %}
     {% for action in follow.author.actions.all %}
       <ul>
-      {% if action.action_url %}
-        <a href="{{ action.action_url }}">{{ action.user }}  {{ action.description }}</a>
-      {% endif %}
+        {% if action.action_url %}
+          <a href="{{ action.action_url }}">{{ action.user }}
+            {{ action.description }}</a>
+        {% endif %}
       </ul>
     {% endfor %}
   {% endfor %}
