@@ -1,3 +1,6 @@
+from importlib import import_module
+
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Exists, OuterRef
@@ -16,7 +19,10 @@ User = get_user_model()
 def index(request):
     template = 'tasks/index.html'
     top_users = Profile.objects.all(
-    ).order_by('-rating')[:10].select_related('user')
+    ).order_by(
+        '-rating'
+    )[:settings.TOP_RANK_PLAYERS_LIMIT].select_related('user')
+
     context = {
         'top_users': top_users,
         'title': 'Контест апп'
@@ -59,13 +65,21 @@ def task_page(request, slug):
         'title': f'Задание {slug}'
     }
     if request.method == 'POST':
-        f = open('tasks/task_tests/form_answer.py', 'w')
-        f.write(request.POST['decision'])
-        # как убрать лишний пропуск строки в записанном файле, и нужно ли?
+        f = open(f'tasks/task_tests/{request.user}_{slug}.py', 'w')
+        f.write(request.POST['decision'].replace('\n', ''))
         f.close()
-        from .task_tests.sum_a_b_c import testing
-        # как заменить sum_a_b_c на слаг из реквеста?
-        answer = testing()
+        module_test_name = f'tasks.task_tests.test_{slug}'
+        module_test = import_module(module_test_name)
+        module_solution_name = f'tasks.task_tests.{request.user}_{slug}'
+        try:
+            module_solution = import_module(module_solution_name)
+            answer = module_test.testing(
+                module_test.tests,
+                module_solution.solution
+            )
+        except Exception as err:
+            answer = err
+
         context['answer'] = answer
         if answer == 'Тесты пройдены!':
 

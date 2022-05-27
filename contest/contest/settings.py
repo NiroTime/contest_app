@@ -136,6 +136,8 @@ INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
+TOP_RANK_PLAYERS_LIMIT = 15
+
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
