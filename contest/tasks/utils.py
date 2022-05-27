@@ -12,7 +12,7 @@ def action_collect(user, description, action_url):
 
 def uniq_action_collect(user, description, action_url):
     action = UserActions.objects.filter(
-        user=request.user,
+        user=user,
         description=description,
         action_url=action_url,
     ).first()

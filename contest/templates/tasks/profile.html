@@ -2,34 +2,28 @@
 {% block title %}{{ author.username }}{% endblock %}
 
 {% block content %}
-
-{% if author.profile.avatar %}
-  <p><img src="{{ author.profile.avatar.url }}"></p>
-{% endif %}
-<p>рейтинг: {{ author.profile.rating }}</p>
-<p>количество постов: {{ posts_count }}</p>
-<p>количество решённых задач: {{ tasks_solved }}</p>
-<p>получено лайков: {{ likes_count }}</p>
-
-{% if user != author %}
-<li class="list-group-item">
-  {% if following %}
-    <a
-      class="btn btn-lg btn-light"
-      href="{% url 'tasks:profile_unfollow' author.username %}" role="button">
-      Отписаться
-    </a>
-  {% else %}
-    <a
-      class="btn btn-lg btn-primary"
-      href="{% url 'tasks:profile_follow' author.username %}" role="button">
-      Подписаться
-    </a>
-  {% endif %}
-</li>
-{% endif %}
-
-
-
-
+  <div class="profile__container">
+    <div class="profile__container__half">
+      {% if author.profile.avatar %}
+        <img src="{{ author.profile.avatar.url }}">
+      {% endif %}
+    </div>
+    <div class="profile__container__half">
+      <p>рейтинг: {{ author.profile.rating }}</p>
+      <p>количество постов: {{ posts_count }}</p>
+      <p>количество решённых задач: {{ tasks_solved }}</p>
+      <p>получено лайков: {{ likes_count }}</p>
+      {% if user != author %}
+        {% if following %}
+          <a href="{% url 'tasks:profile_unfollow' author.username %}">
+            <div class="btn">Отписаться</div>
+          </a>
+        {% else %}
+          <a href="{% url 'tasks:profile_follow' author.username %}">
+            <div class="btn">Подписаться</div>
+          </a>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
 {% endblock %}

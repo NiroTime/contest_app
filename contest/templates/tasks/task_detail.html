@@ -1,31 +1,26 @@
 {% extends 'base.html' %}
 {% block title %}
-{{ title }}
+  {{ title }}
 {% endblock %}
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col-md-8 p-5">
-      <div class="card">
-        <div class="card-header">{{ task.content }}</div>
-          <div class="card-body">
-            <form method="post"
-            {% if action_url %}
-              action="{% url action_url %}"
-            {% endif %}
-            >
-              {% include 'includes/form_base.html' %}
-              {% if answer %}
-                {{ answer }}
-              {% endif %}
-              <div class="col-md-6 offset-md-4">
-                <button type="submit" class="btn btn-primary">
-                  Проверить
-                </button>
-              </div>
-            </form>
-          <a href="{% url 'tasks:task_talks' task.slug %}">Обусждения</a>
-          </div>
-        </div>
-      </div>
+  <div class="task__container">
+    <div class="task__container__half">
+      {{ task.content }}
+      <a href="{% url 'tasks:task_talks' task.slug %}">
+        <div class="btn">Обусждения</div>
+      </a>
+
+    </div>
+    <div class="task__container__half">
+      <form method="post">
+        {% include 'includes/form_base.html' %}
+        {% if answer %}
+          {{ answer }}
+        {% endif %}
+        <button type="submit" class="btn">
+          Проверить
+        </button>
+      </form>
+    </div>
   </div>
 {% endblock %}

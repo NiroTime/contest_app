@@ -1,5 +1,3 @@
-from .form_answer import ostatok_ot_deleniya_na_10
-
 tests = {
     0: True,
     10: True,
@@ -8,12 +6,12 @@ tests = {
 }
 
 
-def testing():
+def testing(tests, func):
     try:
         for test, answer in tests.items():
-            if ostatok_ot_deleniya_na_10(test) != answer:
+            if func(test) != answer:
                 return(f'Тест: {test}, не пройден. '
-                       f'Ваш результат: {ostatok_ot_deleniya_na_10(test)} '
+                       f'Ваш результат: {func(test)} '
                        f'Ожидаемый результат: {answer}'
                        )
         return 'Тесты пройдены!'

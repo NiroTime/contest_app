@@ -30,7 +30,6 @@ def index(request):
         user = request.user
         following = user.following.all().select_related('author')
         authors = [follow.author for follow in following]
-        # хочется получить сэт authors на уровне SQL а не питона, но как?
         actions = UserActions.objects.filter(
             user__in=authors
         )[:settings.INDEX_PAGE_MAX_ACTIONS_COUNT].select_related('user')
@@ -70,12 +69,12 @@ def task_page(request, slug):
         'title': f'Задание {slug}'
     }
     if request.method == 'POST':
-        f = open(f'tasks/task_tests/{request.user}_{slug}.py', 'w')
+        f = open(f'tasks/task_solutions/{request.user}_{slug}.py', 'w')
         f.write(request.POST['decision'].replace('\n', ''))
         f.close()
         module_test_name = f'tasks.task_tests.test_{slug}'
         module_test = import_module(module_test_name)
-        module_solution_name = f'tasks.task_tests.{request.user}_{slug}'
+        module_solution_name = f'tasks.task_solutions.{request.user}_{slug}'
         try:
             module_solution = import_module(module_solution_name)
             answer = module_test.testing(
