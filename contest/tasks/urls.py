@@ -6,7 +6,7 @@ app_name = 'tasks'
 
 urlpatterns = [
     path('', index, name='index'),
-    path('tasks/all/', AllTasksPage.as_view(), name='tasks_all'),
+    path('tasks/all/', all_tasks_page, name='tasks_all'),
     path('tasks/<slug:slug>/', task_page, name='task'),
     path('profile/<username>/', profile, name='profile'),
     path('profile/<username>/edit/', profile_edit, name='profile_edit'),
@@ -17,12 +17,12 @@ urlpatterns = [
     path('tasks/<slug:slug>/talks/', task_talks, name='task_talks'),
     path(
         'tasks/<slug:slug>/talks/comment/<int:pk>/like/',
-        post_like,
-        name='post_like'
+        comment_like,
+        name='comment_like'
     ),
     path(
         'tasks/<slug:slug>/talks/comment/<int:pk>/unlike/',
-        post_unlike,
-        name='post_unlike'
+        comment_unlike,
+        name='comment_unlike'
     ),
 ]

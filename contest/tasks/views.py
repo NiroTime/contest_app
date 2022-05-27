@@ -5,13 +5,12 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Exists, OuterRef
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import ListView
 
 from users.forms import ProfileForm, UpdateUserForm
 from users.models import UserActions, Profile, UsersSolvedTasks
-
 from .forms import AnswerForm, CommentForm
 from .models import Comment, Follow, Like, Task
+from .utils import action_collect, uniq_action_collect
 
 User = get_user_model()
 
@@ -29,7 +28,7 @@ def index(request):
     }
     if request.user.is_authenticated:
         user = request.user
-        following = user.following.all().select_related(
+        following = user.following.all()[:5].select_related(
             'author'
         ).prefetch_related('author__actions')
         context['following'] = following
@@ -37,18 +36,21 @@ def index(request):
     return render(request, template, context=context)
 
 
-class AllTasksPage(ListView):
-    model = Task
-    template_name = 'tasks/tasks_all.html'
-    context_object_name = 'tasks'
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Все задания'
-        return context
-
-    def get_queryset(self):
-        return Task.objects.filter(is_published=True)
+def all_tasks_page(request):
+    template = 'tasks/tasks_all.html'
+    if request.user.is_authenticated:
+        tasks = Task.objects.filter(
+            is_published=True
+        ).annotate(is_solved=Exists(UsersSolvedTasks.objects.filter(
+            user=request.user, task=OuterRef('pk')
+        )))
+    else:
+        tasks = Task.objects.filter(is_published=True)
+    context = {
+        'tasks': tasks,
+        'title': 'Задания',
+    }
+    return render(request, template, context=context)
 
 
 @login_required
@@ -100,18 +102,9 @@ def task_page(request, slug):
             ust.decision = request.POST['decision']
             ust.save()
             user.profile.save()
-            action = UserActions.objects.filter(
-                user=user,
-                description=f'выполнил(а) задание: {slug}!',
-                action_url=f'/tasks/{slug}/',
-            ).first()
-            if not action:
-                action = UserActions(
-                    user=user,
-                    description=f'выполнил(а) задание: {slug}!',
-                    action_url=f'/tasks/{slug}/'
-                )
-                action.save()
+            description = f'выполнил(а) задание: {slug}!'
+            action_url = f'/tasks/{slug}/'
+            uniq_action_collect(user, description, action_url)
 
     return render(request, template, context=context)
     # как применить что-то вроде ревёрс лейзи, чтобы небыло затупов при рендере
@@ -173,32 +166,29 @@ def profile_follow(request, username):
     is_follower = Follow.objects.filter(user=user, author=author)
     if user != author and not is_follower.exists():
         Follow.objects.create(user=user, author=author)
-        action = UserActions(
-            user=request.user,
-            description=f'подписался(ась) на: {username}!',
-            action_url=f'/profile/{username}/'
-        )
-        action.save()
+        description = f'подписался(ась) на: {username}!'
+        action_url = f'/profile/{username}/'
+        action_collect(user, description, action_url)
+
     return redirect('tasks:profile', username)
 
 
 @login_required
 def profile_unfollow(request, username):
+    user = request.user
     author = get_object_or_404(User, username=username)
-    is_follower = Follow.objects.filter(user=request.user, author=author)
+    is_follower = Follow.objects.filter(user=user, author=author)
     if is_follower.exists():
         is_follower.delete()
-        action = UserActions(
-            user=request.user,
-            description=f'отписался(ась) от: {username}!',
-            action_url=f'/profile/{username}/'
-        )
-        action.save()
+        description = f'отписался(ась) от: {username}!'
+        action_url = f'/profile/{username}/'
+        action_collect(user, description, action_url)
+
     return redirect('tasks:profile', username)
 
 
 @login_required
-def post_like(request, slug, pk):
+def comment_like(request, slug, pk):
     comment = Comment.objects.get(pk=pk)
     like = Like.objects.filter(user=request.user, comment=comment)
     if not like.exists():
@@ -207,7 +197,7 @@ def post_like(request, slug, pk):
 
 
 @login_required
-def post_unlike(request, slug, pk):
+def comment_unlike(request, slug, pk):
     comment = Comment.objects.get(pk=pk)
     like = Like.objects.filter(user=request.user, comment=comment)
     if like.exists():
@@ -228,16 +218,14 @@ def task_talks(request, slug):
 
     form = CommentForm(request.POST or None)
     if form.is_valid():
+
         comment = form.save(commit=False)
         comment.author = request.user
         comment.task = task
         comment.save()
-        action = UserActions(
-            user=request.user,
-            description=f'написал(а) комментарий к заданию: {slug}!',
-            action_url=f'/tasks/{slug}/talks/'
-        )
-        action.save()
+        description = f'написал(а) комментарий к заданию: {slug}!',
+        action_url = f'/tasks/{slug}/talks/'
+        action_collect(request.user, description, action_url)
         return redirect('tasks:task_talks', slug)
     context = {
         'task': task,

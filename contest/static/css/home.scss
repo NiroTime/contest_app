@@ -44,7 +44,9 @@
       &__wrapper {
         & a {
           color: $color-white;
-          font-weight: bold;
+          &:first-child{
+            font-weight: bold;
+          }
         }
         & span {
           margin-left: 5px;
