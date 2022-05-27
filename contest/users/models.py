@@ -22,7 +22,7 @@ class Profile(models.Model):
         on_delete=models.CASCADE,
         related_name='profile',
     )
-    avatar = ImageField(upload_to="photos/%Y/%m/%d/", blank=True)
+    avatar = ImageField(upload_to="photos/%Y/%m/%d/", blank=True,)
     rating = models.IntegerField(default=0, editable=False)
 
     @receiver(post_save, sender=User)

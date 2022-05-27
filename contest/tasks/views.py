@@ -28,10 +28,13 @@ def index(request):
     }
     if request.user.is_authenticated:
         user = request.user
-        following = user.following.all()[:5].select_related(
-            'author'
-        ).prefetch_related('author__actions')
-        context['following'] = following
+        following = user.following.all().select_related('author')
+        authors = [follow.author for follow in following]
+        # хочется получить сэт authors на уровне SQL а не питона, но как?
+        actions = UserActions.objects.filter(
+            user__in=authors
+        )[:settings.INDEX_PAGE_MAX_ACTIONS_COUNT].select_related('user')
+        context['actions'] = actions
 
     return render(request, template, context=context)
 

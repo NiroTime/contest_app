@@ -136,7 +136,7 @@ INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
-TOP_RANK_PLAYERS_LIMIT = 15
+TOP_RANK_PLAYERS_LIMIT = 10
 
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -144,3 +144,5 @@ STATICFILES_FINDERS = [
     'sass_processor.finders.CssFinder',
 ]
 SASS_PROCESSOR_ROOT = STATIC_URL
+
+INDEX_PAGE_MAX_ACTIONS_COUNT = 15

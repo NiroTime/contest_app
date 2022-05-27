@@ -24,7 +24,7 @@
           {% for profile in top_users %}
             <tr class='leaderboard__row'>
               <td class='leaderboard__cell'>
-                #1
+                #{{ forloop.counter }}
               </td>
               <td class='leaderboard__cell'>
                 <a href="{% url 'tasks:profile' profile.user %}">
@@ -44,11 +44,15 @@
     </div>
 
     <div class="home__content">
-      {% for follow in following %}
-        {% for action in follow.author.actions.all %}
+        {% for action in actions %}
           <div class="feed">
-            <img class="feed__avatar" src='{% static 'img/user-icon.png' %}'
+            {% if action.user.profile.avatar %}
+            <img class="feed__avatar" src="{{ action.user.profile.avatar.url }}"
                  alt='user-icon'></img>
+            {% else %}
+            <img class="feed__avatar" src="{% static 'img/user-icon.png' %}"
+                 alt='user-icon'></img>
+            {% endif %}
             <div class="feed__wrapper">
               <a href="{% url 'tasks:profile' action.user %}">{{ action.user }}</a>
               <a href="{{ action.action_url }}">{{ action.description }}</a>
@@ -58,7 +62,7 @@
             </div>
           </div>
         {% endfor %}
-      {% endfor %}
     </div>
   </div>
+
 {% endblock %}

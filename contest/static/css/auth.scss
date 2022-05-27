@@ -1,5 +1,4 @@
-.signup,
-.signin {
+.auth {
   &__wrapper {
     display: flex;
     flex-direction: column;
@@ -26,5 +25,8 @@
     font-weight: 700;
     color: $color-white;
     padding: 0.75rem;
+  }
+  &__text {
+    text-align: center;
   }
 }

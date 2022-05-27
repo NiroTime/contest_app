@@ -1,17 +1,19 @@
 {% extends "base.html" %}
 {% block title %}Войти{% endblock %}
 {% block content %}
-  <div class="signin">
-    <div class="signin__wrapper">
-      <div class="signin__logo logo">
+  <div class="auth">
+    <div class="auth__wrapper">
+      <div class="auth__logo logo">
         <span>Contest</span>App
       </div>
-      <div class="signin__form">
+      <div class="auth__form">
         <form class='form' method="post">
           {% include 'includes/form_base.html' %}
-          <button type="submit" class="btn signin__btn">
+          <button type="submit" class="btn auth__btn">
             Войти
           </button>
         </form>
       </div>
-    {% endblock %}
+    </div>
+  </div>
+{% endblock %}
