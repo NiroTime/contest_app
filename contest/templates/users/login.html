@@ -1,21 +1,17 @@
 {% extends "base.html" %}
 {% block title %}Войти{% endblock %}
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col-md-8 p-5">
-      <div class="card">
-        <div class="card-header">Войти на сайт</div>
-        <div class="card-body">
-          <form method="post">
-            {% include 'includes/form_base.html' %}
-            <div class="col-md-6 offset-md-4">
-              <button type="submit" class="btn btn-primary">
-                Войти
-              </button>
-            </div>
-          </form>
-        </div>
+  <div class="signin">
+    <div class="signin__wrapper">
+      <div class="signin__logo logo">
+        <span>Contest</span>App
       </div>
-    </div>
-</div>
-{% endblock %}
+      <div class="signin__form">
+        <form class='form' method="post">
+          {% include 'includes/form_base.html' %}
+          <button type="submit" class="btn signin__btn">
+            Войти
+          </button>
+        </form>
+      </div>
+    {% endblock %}

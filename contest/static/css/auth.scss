@@ -1,0 +1,30 @@
+.signup,
+.signin {
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    background-color: $bg-color-second;
+    max-width: 400px;
+    margin: 75px auto 0 auto;
+    padding: 1.5rem;
+    box-shadow: $box-shadow;
+    border-radius: 5px;
+  }
+  &__logo {
+    margin: 0.75rem auto;
+    font-size: 1.5rem;
+  }
+  &__form {
+    width: 100%;
+  }
+
+  &__btn {
+    margin-top: 1rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: $color-white;
+    padding: 0.75rem;
+  }
+}

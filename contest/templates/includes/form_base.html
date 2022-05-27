@@ -1,41 +1,40 @@
 {% csrf_token %}
+
 {% if form.non_field_errors %}
-{% for error in form.non_field_errors %}
-  <div class="alert alert-danger">
-    {{ error|escape }}
+  <div class="errors">
+    {% for error in form.non_field_errors %}
+      <span>
+        {{ error|escape }}
+      </span>
+      <br/>
+    {% endfor %}
   </div>
-{% endfor %}
-{% endif %}
+  {% endif %}
 {% for field in form %}
-  <div class="form-group row my-3 p-3"
-    {% if field.field.required %}
-      aria-required="true"
-    {% else %}
-      aria-required="false"
-    {% endif %}
-  >
+  <div class="field" {% if field.field.required %} aria-required="false" {% else %} {% endif %}>
     <label for="{{ field.id_for_label }}">
       {{field.label}}
       {% if field.field.required %}
-        <span class="required text-danger" >*</span>
+        <span class="required">*</span>
       {% endif %}
     </label>
-    {{ field }}
+    <div class="input__wrapper">
+      {{ field }}
+    </div>
     {% if field.errors %}
-      {% for error in field.errors %}
-        <div class="alert alert-danger">
-          {{ error|escape }}
-        </div>
-      {% endfor %}
+      <div class="errors">
+        {% for error in field.errors %}
+          <span>
+            {{ error|escape }}
+          </span>
+          <br/>
+        {% endfor %}
+      </div>
     {% endif %}
-    {% if field.help_text %}
-      <small
-        id="{{ field.id_for_label }}-help"
-        class="form-text text-muted">
-       {{ field.help_text }}
+    {% comment %} {% if field.help_text %}
+      <small id="{{ field.id_for_label }}-help" class="form-text text-muted">
+        {{ field.help_text }}
       </small>
-    {% endif %}
+    {% endif %} {% endcomment %}
   </div>
 {% endfor %}
-
-
