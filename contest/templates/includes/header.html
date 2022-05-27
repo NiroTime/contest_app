@@ -3,16 +3,17 @@
     <div class="container">
       <div class="header__wrapper">
         <a href="{% url 'tasks:index' %}">
-          <div class='header__logo'>
-            <span>Contest</span>App</div>
+          <div class='header__logo logo'>
+            <span>Contest</span>App
+          </div>
         </a>
         <ul class="header__links">
           {% with request.resolver_match.view_name as view_name %}
           <a href="{% url 'tasks:tasks_all' %}">
             <li class="header__links-item {% if request.resolver_match.view_name  == 'tasks:tasks_all' %}active{% endif %}">Задания</li>
           </a>
-          <a href="#">
-            <li class="header__links-item {% if request.resolver_match.view_name  == '#' %}active{% endif %}">Теория</li>
+          <a href="{% url 'theory:hash' %}">
+            <li class="header__links-item {% if request.resolver_match.view_name  == 'theory:hash' %}active{% endif %}">Теория</li>
           </a>
         </ul>
         {% if request.user.is_authenticated %}
@@ -27,7 +28,7 @@
               <div class="btn btn--trancsparent {% if request.resolver_match.view_name  == 'users:login' %}active{% endif %}">Войти</div>
             </a>
             <a href="{% url 'users:signup' %}">
-              <div class="btn btn--accent{% if request.resolver_match.view_name  == 'users:signup' %}active{% endif %}">Регистрация</div>
+              <div class="btn btn--accent {% if request.resolver_match.view_name  == 'users:signup' %}active{% endif %}">Регистрация</div>
             </a>
           </div>
         {% endif %}

@@ -12,6 +12,8 @@ body {
 }
 main {
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 a {
   text-decoration: none;
@@ -29,6 +31,7 @@ ul {
 .container {
   width: 1152px;
   margin: 0 auto;
+  flex-grow: 1;
 }
 
 .btn {
@@ -58,7 +61,19 @@ ul {
   font-size: 1.3rem;
   margin-block: 0;
 }
+
+.logo {
+  font-size: 1.2rem;
+  font-weight: 700;
+  & span {
+    text-transform: uppercase;
+    color: $color-accent;
+  }
+}
+
 @import "./header.scss";
 @import "./footer.scss";
 @import "./home.scss";
 @import "./table.scss";
+@import "./form.scss";
+@import "./auth.scss";

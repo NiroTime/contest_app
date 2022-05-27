@@ -1,0 +1,40 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  & .input__wrapper {
+    & input {
+      padding: 8.85px 13px;
+      font-size: 14px;
+      width: 100%;
+      box-sizing: border-box;
+      color: $text-color-main;
+      border: 1px solid $bg-color-element;
+      border-radius: 3px;
+      font-weight: 300;
+      background-color: unset;
+    }
+  }
+  & label {
+    & span.required {
+      color: rgba($color: $color-danger, $alpha: 0.7);
+    }
+  }
+}
+.errors {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: $color-danger;
+  border: 1px solid $color-danger;
+  padding: 0.5rem;
+  background-color: rgba($color: $color-danger, $alpha: 0.1);
+}

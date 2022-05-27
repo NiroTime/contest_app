@@ -1,25 +1,19 @@
 {% extends "base.html" %}
 {% block title %}Зарегистрироваться{% endblock %}
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col-md-8 p-5">
-      <div class="card">
-        <div class="card-header">Зарегистрироваться</div>
-          <div class="card-body">
-            <form method="post"
-            {% if action_url %}
-              action="{% url action_url %}"
-            {% endif %}
-            >
-              {% include 'includes/form_base.html' %}
-              <div class="col-md-6 offset-md-4">
-                <button type="submit" class="btn btn-primary">
-                  Зарегистрироваться
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+  <div class="signup">
+    <div class="signup__wrapper">
+      <div class="signup__logo logo">
+        <span>Contest</span>App
       </div>
+      <div class="signup__form">
+        <form class='form' method="post">
+          {% include 'includes/form_base.html' %}
+          <button type="submit" class="btn signup__btn">
+            Зарегистрироваться
+          </button>
+        </form>
+      </div>
+    </div>
   </div>
 {% endblock %}
