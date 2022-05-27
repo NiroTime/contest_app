@@ -14,13 +14,13 @@
                 {% if not comment.is_request_user %}
                   <a
                     class="btn btn-lg btn-primary"
-                    href="{% url 'tasks:post_like' task.slug comment.pk %}" role="button">
+                    href="{% url 'tasks:comment_like' task.slug comment.pk %}" role="button">
                     Лайк
                   </a>
                 {% else %}
                   <a
                     class="btn btn-lg btn-light"
-                    href="{% url 'tasks:post_unlike' task.slug comment.pk %}" role="button">
+                    href="{% url 'tasks:comment_unlike' task.slug comment.pk %}" role="button">
                     Отменить Лайк
                   </a>
                 {% endif %}

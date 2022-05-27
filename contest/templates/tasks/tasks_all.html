@@ -9,18 +9,32 @@
     </div>
     <table class="tasks-table">
       <tbody>
-        <tr class='tasks-table__row'>
-          <th class='tasks-table__cell'>Статус</th>
-          <th class='tasks-table__cell'>Название</th>
-          <th class='tasks-table__cell'>Сложность</th>
+      <tr class='tasks-table__row'>
+        <th class='tasks-table__cell'>Статус</th>
+        <th class='tasks-table__cell'>Название</th>
+        <th class='tasks-table__cell'>Сложность</th>
+        <th class='tasks-table__cell'>Рейтинг</th>
+      </tr>
+      {% for task in tasks %}
+        <tr class="tasks-table__row">
+          <td class='tasks-table__cell'>
+            {% if task.is_solved %}
+              +
+            {% else %}
+              -
+            {% endif %}
+          </td>
+          <td class='tasks-table__cell'>
+            <a href="{% url 'tasks:task' task.slug %}">{{ task }}</a>
+          </td>
+          <td class='tasks-table__cell'>{{ task.flexibility }}</td>
+          <td class='tasks-table__cell'>
+            {{ task.task_rating }}
+          </td>
         </tr>
+      {% endfor %}
       </tbody>
     </table>
   </div>
 {% endblock %}
 
-{% for task in tasks %}
-  <li class="list-group-item">
-    <a href="{{ task.get_absolute_url }}">{{ task }}</a>
-  </li>
-{% endfor %}
