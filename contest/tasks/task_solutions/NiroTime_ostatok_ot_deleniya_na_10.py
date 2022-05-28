@@ -1,1 +1,1 @@
-def solution(n):
+def solution(n):    if n % 10 == 0:        return True    else:        return n % 10

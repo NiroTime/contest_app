@@ -1,0 +1,1 @@
+def solution(height):    return a+b+c

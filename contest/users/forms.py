@@ -24,8 +24,6 @@ class ProfileForm(forms.ModelForm):
 
 
 class UpdateUserForm(forms.ModelForm):
-    first_name = forms.CharField()
-    last_name = forms.CharField()
     username = forms.CharField(required=True)
     email = forms.EmailField(required=True)
 

@@ -8,6 +8,10 @@
   }
 
   &__avatar {
-
+    width: 10%; /* Ширина области */
+    height: 400px;
+    margin: 0;
+    overflow: hidden;
+    min-width: 600px;
   }
 }

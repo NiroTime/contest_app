@@ -1,100 +1,20 @@
 {% extends "base.html" %}
 {% block title %}{{ author.username }}{% endblock %}
-
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col-md-8 p-5">
-      <div class="card">
-        <div class="card-header">Войти на сайт</div>
-        <div class="card-body">
-          <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {% if user_form.non_field_errors %}
-            {% for error in user_form.non_field_errors %}
-              <div class="alert alert-danger">
-                {{ error|escape }}
-              </div>
-            {% endfor %}
-            {% endif %}
-            {% for field in user_form %}
-              <div class="form-group row my-3 p-3"
-                {% if field.field.required %}
-                  aria-required="true"
-                {% else %}
-                  aria-required="false"
-                {% endif %}
-              >
-                <label for="{{ field.id_for_label }}">
-                  {{field.label}}
-                  {% if field.field.required %}
-                    <span class="required text-danger" >*</span>
-                  {% endif %}
-                </label>
-                {{ field }}
-                {% if field.errors %}
-                  {% for error in field.errors %}
-                    <div class="alert alert-danger">
-                      {{ error|escape }}
-                    </div>
-                  {% endfor %}
-                {% endif %}
-                {% if field.help_text %}
-                  <small
-                    id="{{ field.id_for_label }}-help"
-                    class="form-text text-muted">
-                   {{ field.help_text }}
-                  </small>
-                {% endif %}
-              </div>
-            {% endfor %}
-            {% if profile_form.non_field_errors %}
-            {% for error in profile_form.non_field_errors %}
-              <div class="alert alert-danger">
-                {{ error|escape }}
-              </div>
-            {% endfor %}
-            {% endif %}
-            {% for field in profile_form %}
-              <div class="form-group row my-3 p-3"
-                {% if field.field.required %}
-                  aria-required="true"
-                {% else %}
-                  aria-required="false"
-                {% endif %}
-              >
-                <label for="{{ field.id_for_label }}">
-                  {{field.label}}
-                  {% if field.field.required %}
-                    <span class="required text-danger" >*</span>
-                  {% endif %}
-                </label>
-                {{ field }}
-                {% if field.errors %}
-                  {% for error in field.errors %}
-                    <div class="alert alert-danger">
-                      {{ error|escape }}
-                    </div>
-                  {% endfor %}
-                {% endif %}
-                {% if field.help_text %}
-                  <small
-                    id="{{ field.id_for_label }}-help"
-                    class="form-text text-muted">
-                   {{ field.help_text }}
-                  </small>
-                {% endif %}
-              </div>
-            {% endfor %}
-
-            <div class="col-md-6 offset-md-4">
-              <button type="submit" class="btn btn-primary">
-                Изменить
-              </button>
-            </div>
-          </form>
-        </div>
+  <div class="auth">
+    <div class="auth__wrapper">
+      <div class="auth__logo logo">
+        <span>Contest</span>App
+      </div>
+      <div class="auth__form">
+        <form class='form' method="post" enctype="multipart/form-data">
+          {% include 'includes/form_base.html' with form=user_form %}
+          {% include 'includes/form_base.html' with form=profile_form %}
+          <button type="submit" class="btn auth__btn">
+            Изменить
+          </button>
+        </form>
       </div>
     </div>
-</div>
-
+  </div>
 {% endblock %}

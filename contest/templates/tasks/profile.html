@@ -5,14 +5,8 @@
   <div class="profile__container">
     <div class="profile__container__half">
       {% if author.profile.avatar %}
-        <img src="{{ author.profile.avatar.url }}">
+        <img width="300px" height="350px" src="{{ author.profile.avatar.url }}">
       {% endif %}
-    </div>
-    <div class="profile__container__half">
-      <p>рейтинг: {{ author.profile.rating }}</p>
-      <p>количество постов: {{ posts_count }}</p>
-      <p>количество решённых задач: {{ tasks_solved }}</p>
-      <p>получено лайков: {{ likes_count }}</p>
       {% if user != author %}
         {% if following %}
           <a href="{% url 'tasks:profile_unfollow' author.username %}">
@@ -23,6 +17,20 @@
             <div class="btn">Подписаться</div>
           </a>
         {% endif %}
+      {% endif %}
+    </div>
+    <div class="profile__container__half">
+      <p>рейтинг: {{ author.profile.rating }}</p>
+      <p>количество постов: {{ posts_count }}</p>
+      <p>количество решённых задач: {{ tasks_solved }}</p>
+      <p>получено лайков: {{ likes_count }}</p>
+      <a href="{% url 'users:logout' %}">
+        <div class="btn"> Выйти</div>
+      </a>
+      {% if user == author %}
+        <a href="{% url 'tasks:profile_edit' author %}">
+          <div class="btn">Редактировать профиль</div>
+        </a>
       {% endif %}
     </div>
   </div>

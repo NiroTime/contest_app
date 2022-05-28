@@ -1,3 +1,4 @@
+import logging
 from importlib import import_module
 
 from django.conf import settings
@@ -28,11 +29,15 @@ def index(request):
     }
     if request.user.is_authenticated:
         user = request.user
-        following = user.following.all().select_related('author')
-        authors = [follow.author for follow in following]
+
+        authors = User.objects.filter(
+            pk__in=Follow.objects.filter(
+                user=user).values_list('author', flat=True))
+
         actions = UserActions.objects.filter(
             user__in=authors
-        )[:settings.INDEX_PAGE_MAX_ACTIONS_COUNT].select_related('user')
+        )[:settings.INDEX_PAGE_MAX_ACTIONS_COUNT].prefetch_related('user')
+
         context['actions'] = actions
 
     return render(request, template, context=context)
@@ -40,14 +45,11 @@ def index(request):
 
 def all_tasks_page(request):
     template = 'tasks/tasks_all.html'
+    tasks = Task.objects.filter(is_published=True)
     if request.user.is_authenticated:
-        tasks = Task.objects.filter(
-            is_published=True
-        ).annotate(is_solved=Exists(UsersSolvedTasks.objects.filter(
+        tasks = tasks.annotate(is_solved=Exists(UsersSolvedTasks.objects.filter(
             user=request.user, task=OuterRef('pk')
         )))
-    else:
-        tasks = Task.objects.filter(is_published=True)
     context = {
         'tasks': tasks,
         'title': 'Задания',
@@ -69,9 +71,9 @@ def task_page(request, slug):
         'title': f'Задание {slug}'
     }
     if request.method == 'POST':
-        f = open(f'tasks/task_solutions/{request.user}_{slug}.py', 'w')
-        f.write(request.POST['decision'].replace('\n', ''))
-        f.close()
+        with open(f'tasks/task_solutions/{request.user}_{slug}.py', 'w') as f:
+            f.write(request.POST['decision'].replace('\n', ''))
+
         module_test_name = f'tasks.task_tests.test_{slug}'
         module_test = import_module(module_test_name)
         module_solution_name = f'tasks.task_solutions.{request.user}_{slug}'
@@ -83,6 +85,9 @@ def task_page(request, slug):
             )
         except Exception as err:
             answer = err
+
+        logger = logging.getLogger()
+        logger.error(answer)
 
         context['answer'] = answer
         if answer == 'Тесты пройдены!':
@@ -109,7 +114,6 @@ def task_page(request, slug):
             uniq_action_collect(user, description, action_url)
 
     return render(request, template, context=context)
-    # как применить что-то вроде ревёрс лейзи, чтобы небыло затупов при рендере
 
 
 def profile(request, username):
